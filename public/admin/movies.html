@@ -182,6 +182,11 @@
             <label class="form-label">Descripción</label>
             <textarea class="form-control" name="description" rows="3">${movie?.description || ''}</textarea>
           </div>
+          <div class="form-group">
+            <label class="form-label">🎬 URL del Tráiler (YouTube)</label>
+            <input type="url" class="form-control" name="trailerUrl" value="${movie?.trailerUrl || ''}" placeholder="https://www.youtube.com/watch?v=... o https://youtu.be/...">
+            <p class="form-help">Pega el enlace de YouTube del tráiler oficial. Ej: https://youtu.be/abc123</p>
+          </div>
         </form>
       `;
 
@@ -215,7 +220,8 @@
         salePrice: parseFloat(formData.get('salePrice')) || 0,
         rentalPrice: parseFloat(formData.get('rentalPrice')) || 0,
         imageUrl: formData.get('imageUrl'),
-        description: formData.get('description')
+        description: formData.get('description'),
+        trailerUrl: formData.get('trailerUrl') || null,
       };
 
       try {

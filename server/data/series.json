@@ -28,6 +28,7 @@
     "rentalPrice": 9.99,
     "imageUrl": "https://image.tmdb.org/t/p/w500/49WJfeN0moxb9IPfGn8AIqMGskD.jpg",
     "description": "Un grupo de jóvenes enfrenta fuerzas sobrenaturales en la pequeña ciudad de Hawkins.",
+    "trailerUrl": "https://www.youtube.com/watch?v=sBEvEcpnG7k",
     "createdAt": "2024-01-20T10:00:00Z",
     "active": true,
     "isan": "",
@@ -64,6 +65,7 @@
     "rentalPrice": 11.99,
     "imageUrl": "https://image.tmdb.org/t/p/w500/uKvVjHNqB5VmOrdxqAt2F7J78ED.jpg",
     "description": "Joel y Ellie cruzan una América post-apocalíptica devastada por una pandemia fúngica.",
+    "trailerUrl": "https://www.youtube.com/watch?v=uLtkt8BonwM",
     "createdAt": "2024-02-01T10:00:00Z",
     "active": true
   },
@@ -97,6 +99,7 @@
     "rentalPrice": 10.99,
     "imageUrl": "https://image.tmdb.org/t/p/w500/7QMsOTMUswlwxJP0rTTZfmz2tX2.jpg",
     "description": "La guerra civil entre los Targaryen desgarra Poniente en una lucha por el Trono de Hierro.",
+    "trailerUrl": "https://www.youtube.com/watch?v=YN2H_sKcmGw",
     "createdAt": "2024-06-15T10:00:00Z",
     "active": true
   },
@@ -128,6 +131,7 @@
     "rentalPrice": 7.99,
     "imageUrl": "https://image.tmdb.org/t/p/w500/9PFonBhy4cQy7Jz20NpMygczOkv.jpg",
     "description": "Wednesday Addams investiga una serie de asesinatos en la Academia Nevermore.",
+    "trailerUrl": "https://www.youtube.com/watch?v=Di310WS8zLk",
     "createdAt": "2024-01-25T10:00:00Z",
     "active": true
   },
@@ -159,6 +163,7 @@
     "rentalPrice": 9.99,
     "imageUrl": "https://image.tmdb.org/t/p/w500/7O4iVfOMQmdCSxhOg1WnzG1AgmT.jpg",
     "description": "Un navegante inglés se ve envuelto en las intrigas políticas del Japón feudal.",
+    "trailerUrl": "https://www.youtube.com/watch?v=yAN5uspO_hk",
     "createdAt": "2024-03-01T10:00:00Z",
     "active": true
   },
@@ -189,6 +194,7 @@
     "rentalPrice": 8.99,
     "imageUrl": "https://image.tmdb.org/t/p/w500/pEAlFHuaJAWBA1TalifROuUU6EW.jpg",
     "description": "Empleados de una corporación descubren terribles secretos sobre su procedimiento de separación.",
+    "trailerUrl": "https://www.youtube.com/watch?v=_UXKlYvLGJY",
     "createdAt": "2025-01-15T10:00:00Z",
     "active": true
   },

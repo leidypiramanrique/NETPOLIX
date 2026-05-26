@@ -39,6 +39,7 @@
     "rentalPrice": 5.99,
     "imageUrl": "https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg",
     "description": "La historia del físico J. Robert Oppenheimer y su papel en el desarrollo de la bomba atómica.",
+    "trailerUrl": "https://www.youtube.com/watch?v=bK6ldnjE3Y0",
     "createdAt": "2024-01-15T10:00:00Z",
     "active": true
   },
@@ -81,6 +82,7 @@
     "rentalPrice": 4.99,
     "imageUrl": "https://image.tmdb.org/t/p/w500/iuFNMS8U5cb6xfzi51Dbkovj7vM.jpg",
     "description": "Barbie y Ken se embarcan en un viaje de autodescubrimiento desde Barbieland al mundo real.",
+    "trailerUrl": "https://www.youtube.com/watch?v=pBk4NYhWNMM",
     "createdAt": "2024-01-20T10:00:00Z",
     "active": true
   },
@@ -127,6 +129,7 @@
     "rentalPrice": 6.99,
     "imageUrl": "https://image.tmdb.org/t/p/w500/8b8R8l88Qje9dn9OE8PY05Nez7S.jpg",
     "description": "Paul Atreides se une a los Fremen para vengar a su familia mientras intenta evitar un terrible destino.",
+    "trailerUrl": "https://www.youtube.com/watch?v=U2Qp5pL3ovA",
     "createdAt": "2024-03-01T10:00:00Z",
     "active": true
   },
@@ -167,6 +170,7 @@
     "rentalPrice": 5.49,
     "imageUrl": "https://image.tmdb.org/t/p/w500/kCGlIMHnOm8JPXq3rXM6c5wMxcT.jpg",
     "description": "La fantástica historia de la evolución de Bella Baxter, una mujer traída de vuelta a la vida.",
+    "trailerUrl": "https://www.youtube.com/watch?v=RlbR5N6veqw",
     "createdAt": "2024-02-10T10:00:00Z",
     "active": true
   },
@@ -211,6 +215,7 @@
     "rentalPrice": 3.99,
     "imageUrl": "https://image.tmdb.org/t/p/w500/ljsZTbVsrQSqZgWeep2B1QiDKuh.jpg",
     "description": "Un ladrón que roba secretos del subconsciente durante el sueño recibe una tarea imposible.",
+    "trailerUrl": "https://www.youtube.com/watch?v=YoHD9XEInc0",
     "createdAt": "2024-01-15T10:00:00Z",
     "active": true
   },
@@ -250,6 +255,7 @@
     "rentalPrice": 4.99,
     "imageUrl": "https://image.tmdb.org/t/p/w500/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg",
     "description": "La familia Kim, desempleada, se infiltra en la vida de la rica familia Park.",
+    "trailerUrl": "https://www.youtube.com/watch?v=isOGD_7hNIY",
     "createdAt": "2024-01-18T10:00:00Z",
     "active": true
   },
@@ -291,6 +297,7 @@
     "rentalPrice": 5.49,
     "imageUrl": "https://image.tmdb.org/t/p/w500/w3LxiVYdWWRvEVdn5RYq6jIqkb1.jpg",
     "description": "Una inmigrante china se ve envuelta en una aventura que abarca múltiples universos.",
+    "trailerUrl": "https://www.youtube.com/watch?v=wxN1T1uxQ2g",
     "createdAt": "2024-01-22T10:00:00Z",
     "active": true
   },
@@ -328,6 +335,7 @@
     "rentalPrice": 5.99,
     "imageUrl": "https://image.tmdb.org/t/p/w500/74xTEgt7R36Fpooo50r9T25onhq.jpg",
     "description": "Batman investiga la corrupción en Gotham City mientras persigue a un asesino en serie.",
+    "trailerUrl": "https://www.youtube.com/watch?v=mqqft2x_Aa4",
     "createdAt": "2024-02-05T10:00:00Z",
     "active": true
   },
@@ -370,6 +378,7 @@
     "rentalPrice": 3.99,
     "imageUrl": "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
     "description": "Un grupo de exploradores viaja a través de un agujero de gusano para encontrar un nuevo hogar para la humanidad.",
+    "trailerUrl": "https://www.youtube.com/watch?v=2LqzF5WauAw",
     "createdAt": "2024-01-15T10:00:00Z",
     "active": true
   },
@@ -405,6 +414,7 @@
     "rentalPrice": 3.49,
     "imageUrl": "https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsRolD1fZdja1.jpg",
     "description": "La historia épica de la familia Corleone y su imperio criminal en Nueva York.",
+    "trailerUrl": "https://www.youtube.com/watch?v=UaVTIH8mujA",
     "createdAt": "2024-01-15T10:00:00Z",
     "active": true
   },
@@ -442,6 +452,7 @@
     "rentalPrice": 5.49,
     "imageUrl": "https://image.tmdb.org/t/p/w500/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg",
     "description": "Peter Parker pide ayuda al Doctor Strange cuando su identidad es revelada al mundo.",
+    "trailerUrl": "https://www.youtube.com/watch?v=ZYzbalQ6Lg8",
     "createdAt": "2024-02-12T10:00:00Z",
     "active": true
   },
@@ -481,6 +492,7 @@
     "rentalPrice": 6.49,
     "imageUrl": "https://image.tmdb.org/t/p/w500/2cxhvwyEwRlysAmRH4iodkvo0z5.jpg",
     "description": "Lucius, hijo de Lucilla, se ve forzado a entrar en el Coliseo después de que su hogar sea conquistado.",
+    "trailerUrl": "https://www.youtube.com/watch?v=4rgYUipGJNo",
     "createdAt": "2024-11-15T10:00:00Z",
     "active": true
   },
@@ -521,6 +533,7 @@
     "rentalPrice": 5.99,
     "imageUrl": "https://image.tmdb.org/t/p/w500/dB6Krk806zeqd0YNp2ngQ9zXteH.jpg",
     "description": "En los años 20, miembros de la nación Osage son asesinados tras descubrir petróleo en sus tierras.",
+    "trailerUrl": "https://www.youtube.com/watch?v=EP34Yoxs3FQ",
     "createdAt": "2024-01-25T10:00:00Z",
     "active": true
   },
@@ -558,6 +571,7 @@
     "rentalPrice": 3.99,
     "imageUrl": "https://image.tmdb.org/t/p/w500/qbav3ESOV4tR6MqmOYHk1reOP8f.jpg",
     "description": "Un joven afroamericano visita la familia de su novia blanca y descubre un inquietante secreto.",
+    "trailerUrl": "https://www.youtube.com/watch?v=sRfnevzM9kQ",
     "createdAt": "2024-01-30T10:00:00Z",
     "active": true
   },
@@ -597,6 +611,7 @@
     "rentalPrice": 4.49,
     "imageUrl": "https://image.tmdb.org/t/p/w500/uDO8zWDhfWwoFdKS4fzkUJt0Rf0.jpg",
     "description": "Un músico de jazz y una aspirante a actriz se enamoran en Los Ángeles mientras persiguen sus sueños.",
+    "trailerUrl": "https://www.youtube.com/watch?v=0pdqf4P9MB8",
     "createdAt": "2024-02-01T10:00:00Z",
     "active": true
   },
@@ -637,6 +652,7 @@
     "rentalPrice": 4.99,
     "imageUrl": "https://image.tmdb.org/t/p/w500/gajva2L0rPYkEWjzgFlBXCAVBE5.jpg",
     "description": "Un nuevo blade runner descubre un secreto que podría sumir a la sociedad en el caos.",
+    "trailerUrl": "https://www.youtube.com/watch?v=gCcx85zbxz4",
     "createdAt": "2024-02-08T10:00:00Z",
     "active": true
   },
@@ -676,6 +692,7 @@
     "rentalPrice": 3.49,
     "imageUrl": "https://image.tmdb.org/t/p/w500/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg",
     "description": "Múltiples historias entrelazadas de crimen y redención en Los Ángeles.",
+    "trailerUrl": "https://www.youtube.com/watch?v=tGpTpVyI_OQ",
     "createdAt": "2024-01-15T10:00:00Z",
     "active": true
   },
@@ -712,6 +729,7 @@
     "rentalPrice": 4.49,
     "imageUrl": "https://image.tmdb.org/t/p/w500/v31MsWhF9WFh7Qooqbnj6yDm73j.jpg",
     "description": "Una joven pareja viaja a una isla exclusiva para cenar en un restaurante del famoso chef Slowik.",
+    "trailerUrl": "https://www.youtube.com/watch?v=C_uTkUGcHv4",
     "createdAt": "2024-02-15T10:00:00Z",
     "active": true
   },
@@ -752,6 +770,7 @@
     "rentalPrice": 3.99,
     "imageUrl": "https://image.tmdb.org/t/p/w500/yn5ihODtZ7ofn8pDYfxCmxh8AXI.jpg",
     "description": "Las cuatro hermanas March luchan por vivir con independencia en la América de la Guerra Civil.",
+    "trailerUrl": "https://www.youtube.com/watch?v=AST2-4db4ic",
     "createdAt": "2024-02-20T10:00:00Z",
     "active": true
   },
@@ -790,6 +809,7 @@
     "rentalPrice": 20.3,
     "imageUrl": "https://image.tmdb.org/t/p/w500/sKCr78MXSLixwmZ8DyJLrpMsd15.jpg",
     "description": "Din Djarin y Grogu enfrentan una nueva amenaza que pone en peligro a toda la galaxia.",
+    "trailerUrl": "https://www.youtube.com/watch?v=uwild1rw7Aw",
     "createdAt": "2025-01-10T10:00:00Z",
     "active": true
   }

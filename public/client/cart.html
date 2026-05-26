@@ -12,6 +12,208 @@
   <link rel="stylesheet" href="/css/animations.css">
   <link rel="stylesheet" href="/css/forms.css">
   <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/detail-modal.css">
+  <style>
+    /* ── Post-purchase rating screen ── */
+    .rating-screen {
+      display: none;
+      animation: fadeInUp 0.5s ease;
+    }
+
+    .rating-screen.active { display: block; }
+
+    .purchase-success-banner {
+      background: linear-gradient(135deg, rgba(0,255,136,0.08), rgba(0,212,255,0.08));
+      border: 1px solid rgba(0,255,136,0.25);
+      border-radius: 20px;
+      padding: 32px;
+      text-align: center;
+      margin-bottom: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .purchase-success-banner::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, #00FF88, #00D4FF, transparent);
+    }
+
+    .purchase-success-banner .success-icon {
+      font-size: 3.5rem;
+      margin-bottom: 12px;
+      animation: float 3s ease-in-out infinite;
+      display: block;
+    }
+
+    .purchase-success-banner h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .purchase-success-banner p {
+      color: rgba(255,255,255,0.55);
+      font-size: 0.9rem;
+    }
+
+    .points-earned-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 20px;
+      background: rgba(255,215,0,0.12);
+      border: 1px solid rgba(255,215,0,0.3);
+      border-radius: 30px;
+      color: #FFD700;
+      font-weight: 700;
+      font-size: 1rem;
+      margin-top: 14px;
+    }
+
+    .rate-items-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .rate-item-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px;
+      padding: 20px 24px;
+      margin-bottom: 16px;
+      transition: border-color 0.3s ease;
+    }
+
+    .rate-item-card.rated {
+      border-color: rgba(0,255,136,0.3);
+      background: rgba(0,255,136,0.03);
+    }
+
+    .rate-item-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .rate-item-icon {
+      width: 52px; height: 52px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(0,212,255,0.15), rgba(139,92,246,0.15));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem;
+      flex-shrink: 0;
+    }
+
+    .rate-item-title {
+      font-weight: 700;
+      font-size: 1rem;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .rate-item-sub {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.4);
+    }
+
+    .cart-star-widget {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 10px;
+    }
+
+    .cart-star-btn {
+      font-size: 1.8rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      filter: grayscale(1) brightness(0.4);
+      padding: 2px 4px;
+      line-height: 1;
+    }
+
+    .cart-star-btn:hover,
+    .cart-star-btn.lit,
+    .cart-star-btn.selected {
+      filter: grayscale(0) brightness(1.05);
+      transform: scale(1.28);
+      text-shadow: 0 0 18px rgba(255,184,0,0.9);
+    }
+
+    .cart-star-label {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.4);
+      min-height: 18px;
+      margin-bottom: 12px;
+      transition: color 0.2s ease;
+    }
+
+    .cart-star-label.active { color: #FFB800; font-weight: 600; }
+
+    .cart-submit-star-btn {
+      padding: 9px 22px;
+      background: linear-gradient(135deg, #FFB800, #FF8C00);
+      border: none;
+      border-radius: 10px;
+      color: #000;
+      font-size: 0.85rem;
+      font-weight: 800;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 14px rgba(255,184,0,0.28);
+      display: none;
+    }
+
+    .cart-submit-star-btn.visible { display: inline-flex; align-items: center; gap: 6px; }
+    .cart-submit-star-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,184,0,0.45); }
+    .cart-submit-star-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    .rate-done-msg {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.85rem;
+      color: rgba(0,255,136,0.85);
+      background: rgba(0,255,136,0.06);
+      border: 1px solid rgba(0,255,136,0.2);
+      border-radius: 8px;
+      padding: 10px 16px;
+    }
+
+    .continue-btn {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #00D4FF, #0094CC);
+      border: none;
+      border-radius: 14px;
+      color: #000;
+      font-size: 1rem;
+      font-weight: 800;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 24px rgba(0,212,255,0.28);
+      margin-top: 28px;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .continue-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 36px rgba(0,212,255,0.45); }
+  </style>
 </head>
 <body>
   <div class="app-layout">
@@ -22,53 +224,77 @@
         <h2 class="top-bar-title">🛒 Carrito de Compras</h2>
       </header>
       <div class="page-content">
-        <div class="page-header"><h1>🛒 Mi Carrito</h1><p>Revisa y confirma tus compras y alquileres</p></div>
 
-        <div style="display:grid;grid-template-columns:1fr 340px;gap:var(--space-6);" id="cart-layout">
-          <!-- Cart Items -->
-          <div>
-            <div id="cart-items"></div>
-          </div>
+        <!-- ── Normal cart view ── -->
+        <div id="cart-view">
+          <div class="page-header"><h1>🛒 Mi Carrito</h1><p>Revisa y confirma tus compras y alquileres</p></div>
 
-          <!-- Order Summary -->
-          <div>
-            <div class="card" style="position:sticky;top:calc(var(--topbar-height) + var(--space-4));">
-              <div class="card-header"><h4>💳 Resumen del Pedido</h4></div>
-              <div class="card-body">
-                <div id="order-summary"></div>
+          <div style="display:grid;grid-template-columns:1fr 340px;gap:var(--space-6);" id="cart-layout">
+            <div>
+              <div id="cart-items"></div>
+            </div>
+            <div>
+              <div class="card" style="position:sticky;top:calc(var(--topbar-height) + var(--space-4));">
+                <div class="card-header"><h4>💳 Resumen del Pedido</h4></div>
+                <div class="card-body">
+                  <div id="order-summary"></div>
 
-                <!-- Points redemption -->
-                <div class="form-group mt-4" id="points-section" style="display:none;">
-                  <label class="form-label">⭐ Canjear Puntos</label>
-                  <div style="padding:var(--space-3);background:var(--bg-surface);border-radius:var(--radius-md);margin-bottom:var(--space-2);">
-                    <div class="flex justify-between fs-sm mb-2">
-                      <span class="text-secondary">Puntos disponibles:</span>
-                      <span class="neon-text-blue fw-bold" id="available-points">0</span>
+                  <div class="form-group mt-4" id="points-section" style="display:none;">
+                    <label class="form-label">⭐ Canjear Puntos</label>
+                    <div style="padding:var(--space-3);background:var(--bg-surface);border-radius:var(--radius-md);margin-bottom:var(--space-2);">
+                      <div class="flex justify-between fs-sm mb-2">
+                        <span class="text-secondary">Puntos disponibles:</span>
+                        <span class="neon-text-blue fw-bold" id="available-points">0</span>
+                      </div>
+                      <div class="input-group">
+                        <input type="number" class="form-control" id="points-input" placeholder="0" min="0" oninput="updateTotal()">
+                        <span class="input-group-text" style="border-radius:0 var(--radius-md) var(--radius-md) 0;">pts</span>
+                      </div>
+                      <p class="form-help mt-1">100 puntos = $1.00 de descuento</p>
                     </div>
-                    <div class="input-group">
-                      <input type="number" class="form-control" id="points-input" placeholder="0" min="0" oninput="updateTotal()">
-                      <span class="input-group-text" style="border-radius:0 var(--radius-md) var(--radius-md) 0;">pts</span>
+                  </div>
+
+                  <div id="final-total" class="mt-4" style="padding:var(--space-4);background:var(--bg-surface);border-radius:var(--radius-md);">
+                    <div class="flex justify-between fw-bold fs-lg">
+                      <span>Total:</span>
+                      <span class="neon-text-blue" id="total-price">$0.00</span>
                     </div>
-                    <p class="form-help mt-1">100 puntos = $1.00 de descuento</p>
+                    <div class="fs-xs text-muted mt-1" id="points-earned-preview"></div>
                   </div>
-                </div>
 
-                <div id="final-total" class="mt-4" style="padding:var(--space-4);background:var(--bg-surface);border-radius:var(--radius-md);">
-                  <div class="flex justify-between fw-bold fs-lg">
-                    <span>Total:</span>
-                    <span class="neon-text-blue" id="total-price">$0.00</span>
-                  </div>
-                  <div class="fs-xs text-muted mt-1" id="points-earned-preview"></div>
+                  <button class="btn btn-primary btn-lg w-full mt-4" id="checkout-btn" onclick="checkout()">
+                    ✅ Confirmar Pedido
+                  </button>
+                  <a href="/client/catalog.html" class="btn btn-ghost w-full mt-2">← Seguir comprando</a>
                 </div>
-
-                <button class="btn btn-primary btn-lg w-full mt-4" id="checkout-btn" onclick="checkout()">
-                  ✅ Confirmar Pedido
-                </button>
-                <a href="/client/catalog.html" class="btn btn-ghost w-full mt-2">← Seguir comprando</a>
               </div>
             </div>
           </div>
         </div>
+
+        <!-- ── Post-purchase: rate your items ── -->
+        <div id="rating-screen" class="rating-screen">
+          <div class="purchase-success-banner">
+            <span class="success-icon">🎉</span>
+            <h2>¡Pedido confirmado con éxito!</h2>
+            <p>Tu compra ha sido procesada. Disfruta tu contenido.</p>
+            <div class="points-earned-badge">
+              👑 <span id="earned-points-text">Ganaste puntos</span>
+            </div>
+          </div>
+
+          <div class="rate-items-title">
+            ⭐ ¿Cómo calificarías lo que compraste?
+            <span style="font-size:0.8rem;font-weight:400;color:rgba(255,255,255,0.35);">(opcional)</span>
+          </div>
+
+          <div id="rate-items-list"></div>
+
+          <a href="/client/catalog.html" class="continue-btn">
+            🎬 Seguir explorando el catálogo
+          </a>
+        </div>
+
       </div>
     </div>
   </div>
@@ -80,6 +306,11 @@
   <script>
     let cart = [];
     let userPoints = 0;
+    let purchasedItems = []; // items bought, for rating screen
+    // Track selected stars per item: { [itemId]: number }
+    const itemStars = {};
+
+    const STAR_LABELS = ['Mala 😕', 'Regular 😐', 'Buena 😊', 'Muy buena 😃', 'Excelente 🤩'];
 
     document.addEventListener('DOMContentLoaded', async () => {
       if (!AuthManager.checkAuth()) return;
@@ -114,19 +345,21 @@
       }
 
       el.innerHTML = cart.map((item, i) => `
-        <div class="card mb-4 fade-in-up" style="animation-delay:${i*0.05}s">
+        <div class="card mb-4 fade-in-up" style="animation-delay:${i * 0.05}s">
           <div class="card-body">
             <div class="flex items-center gap-4">
-              <div style="width:50px;height:70px;background:var(--gradient-neon-soft);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.5rem;">${item.itemType==='movie'?'🎬':item.itemType==='series'?'📺':'📦'}</div>
+              <div style="width:56px;height:72px;background:var(--gradient-neon-soft);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.8rem;">
+                ${item.itemType === 'movie' ? '🎬' : item.itemType === 'series' ? '📺' : '📦'}
+              </div>
               <div style="flex:1;">
-                <div class="fw-semibold">${item.itemTitle}</div>
-                <div class="flex gap-2 mt-1">
-                  <span class="badge ${item.opType==='compra'?'badge-green':'badge-blue'}">${item.opType==='compra'?'Compra':'Alquiler'}</span>
-                  <span class="badge badge-gray">${item.itemType==='movie'?'Película':item.itemType==='series'?'Serie':'Colección'}</span>
+                <div class="fw-semibold fs-base">${item.itemTitle}</div>
+                <div class="flex gap-2 mt-1 flex-wrap">
+                  <span class="badge ${item.opType === 'compra' ? 'badge-green' : 'badge-blue'}">${item.opType === 'compra' ? '💳 Compra' : '🎬 Alquiler'}</span>
+                  <span class="badge badge-gray">${item.itemType === 'movie' ? 'Película' : item.itemType === 'series' ? 'Serie' : 'Colección'}</span>
                 </div>
               </div>
               <div class="text-right">
-                <div class="fw-bold fs-lg neon-text-blue">$${item.price?.toFixed(2)||'0.00'}</div>
+                <div class="fw-bold fs-lg neon-text-blue">$${item.price?.toFixed(2) || '0.00'}</div>
                 <button class="btn btn-ghost btn-sm text-neon-red mt-1" onclick="removeFromCart(${i})">✕ Quitar</button>
               </div>
             </div>
@@ -148,17 +381,14 @@
       const pointsToRedeem = Math.min(parseInt(document.getElementById('points-input')?.value || 0), userPoints);
       const discount = pointsToRedeem / 100;
       const total = Math.max(0, subtotal - discount);
-      const pointsToEarn = cart.filter(i => i.opType==='compra').length * 25 + cart.filter(i => i.opType==='alquiler').length * 10;
+      const pointsToEarn = cart.filter(i => i.opType === 'compra').length * 25 + cart.filter(i => i.opType === 'alquiler').length * 10;
 
       document.getElementById('total-price').textContent = '$' + total.toFixed(2);
-
-      const summaryEl = document.getElementById('order-summary');
-      summaryEl.innerHTML = `
+      document.getElementById('order-summary').innerHTML = `
         <div class="flex justify-between fs-sm mb-2"><span class="text-secondary">Subtotal:</span><span>$${subtotal.toFixed(2)}</span></div>
-        ${pointsToRedeem > 0 ? `<div class="flex justify-between fs-sm mb-2 text-success"><span>Descuento puntos (${pointsToRedeem} pts):</span><span>-$${discount.toFixed(2)}</span></div>` : ''}
+        ${pointsToRedeem > 0 ? `<div class="flex justify-between fs-sm mb-2 text-success"><span>Descuento (${pointsToRedeem} pts):</span><span>-$${discount.toFixed(2)}</span></div>` : ''}
         <hr style="border-color:var(--border-color);margin:var(--space-2) 0;">
       `;
-
       if (cart.length > 0) {
         document.getElementById('points-earned-preview').textContent = `Ganarás ${pointsToEarn} puntos con esta compra`;
       }
@@ -168,21 +398,132 @@
       if (cart.length === 0) return;
       const btn = document.getElementById('checkout-btn');
       btn.disabled = true;
-      btn.textContent = 'Procesando...';
+      btn.innerHTML = '<span class="spinner" style="width:18px;height:18px;border-width:2px;display:inline-block;margin-right:8px;"></span>Procesando...';
 
       const pointsToRedeem = Math.min(parseInt(document.getElementById('points-input')?.value || 0), userPoints);
       const items = cart.map(item => ({ itemId: item.itemId, itemType: item.itemType, type: item.opType }));
 
       try {
         const result = await NetPolixAPI.post('/orders', { items, pointsToRedeem });
+
+        // Save purchased items for rating screen
+        purchasedItems = cart.map(item => ({ ...item }));
         localStorage.removeItem('netpolix_cart');
         cart = [];
-        showNotification(`¡Pedido confirmado! Ganaste ${result.pointsEarned} puntos. Puntos actuales: ${result.currentPoints}`, 'success', 6000);
-        setTimeout(() => window.location.href = '/client/history.html', 2000);
+
+        // Show rating screen
+        showRatingScreen(result);
       } catch (err) {
         showNotification('Error al procesar el pedido: ' + err.message, 'error');
         btn.disabled = false;
-        btn.textContent = '✅ Confirmar Pedido';
+        btn.innerHTML = '✅ Confirmar Pedido';
+      }
+    }
+
+    function showRatingScreen(result) {
+      // Hide cart, show rating
+      document.getElementById('cart-view').style.display = 'none';
+      const screen = document.getElementById('rating-screen');
+      screen.classList.add('active');
+
+      // Points earned
+      document.getElementById('earned-points-text').textContent =
+        `+${result.pointsEarned} puntos · Total: ${result.currentPoints} puntos`;
+
+      // Build rate cards for movies and series only
+      const rateable = purchasedItems.filter(i => i.itemType === 'movie' || i.itemType === 'series');
+      const list = document.getElementById('rate-items-list');
+
+      if (!rateable.length) {
+        list.innerHTML = `<p style="color:rgba(255,255,255,0.4);font-size:0.9rem;margin-bottom:16px;">No hay películas o series para calificar en este pedido.</p>`;
+        return;
+      }
+
+      list.innerHTML = rateable.map((item, idx) => `
+        <div class="rate-item-card" id="rate-card-${idx}">
+          <div class="rate-item-header">
+            <div class="rate-item-icon">${item.itemType === 'movie' ? '🎬' : '📺'}</div>
+            <div>
+              <div class="rate-item-title">${item.itemTitle}</div>
+              <div class="rate-item-sub">${item.itemType === 'movie' ? 'Película' : 'Serie'} · ${item.opType === 'compra' ? 'Compra' : 'Alquiler'}</div>
+            </div>
+          </div>
+          <div class="cart-star-widget" id="stars-${idx}">
+            ${[1,2,3,4,5].map(n => `<button class="cart-star-btn" data-idx="${idx}" data-stars="${n}" onclick="selectCartStar(${idx}, ${n}, '${item.itemId}', '${item.itemType}')">⭐</button>`).join('')}
+          </div>
+          <div class="cart-star-label" id="star-label-${idx}">Selecciona cuántas estrellas merece</div>
+          <button class="cart-submit-star-btn" id="submit-star-${idx}" onclick="submitCartRating(${idx}, '${item.itemId}', '${item.itemType}')">
+            ✨ Enviar calificación
+          </button>
+        </div>
+      `).join('');
+
+      // Add hover events for stars
+      rateable.forEach((_, idx) => initCartStars(idx));
+    }
+
+    function initCartStars(idx) {
+      const stars = document.querySelectorAll(`.cart-star-btn[data-idx="${idx}"]`);
+      stars.forEach(btn => {
+        btn.addEventListener('mouseenter', () => {
+          const h = parseInt(btn.dataset.stars);
+          stars.forEach(s => s.classList.toggle('lit', parseInt(s.dataset.stars) <= h));
+          const lbl = document.getElementById(`star-label-${idx}`);
+          if (lbl) { lbl.textContent = STAR_LABELS[h - 1]; lbl.classList.add('active'); }
+        });
+        btn.addEventListener('mouseleave', () => {
+          const sel = itemStars[idx] || 0;
+          stars.forEach(s => { s.classList.remove('lit'); s.classList.toggle('selected', parseInt(s.dataset.stars) <= sel); });
+          const lbl = document.getElementById(`star-label-${idx}`);
+          if (lbl) {
+            if (sel > 0) { lbl.textContent = STAR_LABELS[sel - 1]; lbl.classList.add('active'); }
+            else { lbl.textContent = 'Selecciona cuántas estrellas merece'; lbl.classList.remove('active'); }
+          }
+        });
+      });
+    }
+
+    function selectCartStar(idx, n, itemId, type) {
+      itemStars[idx] = n;
+      const stars = document.querySelectorAll(`.cart-star-btn[data-idx="${idx}"]`);
+      stars.forEach(s => {
+        const v = parseInt(s.dataset.stars);
+        s.classList.toggle('selected', v <= n);
+        s.classList.remove('lit');
+      });
+      const lbl = document.getElementById(`star-label-${idx}`);
+      if (lbl) { lbl.textContent = STAR_LABELS[n - 1]; lbl.classList.add('active'); }
+      const btn = document.getElementById(`submit-star-${idx}`);
+      if (btn) btn.classList.add('visible');
+    }
+
+    async function submitCartRating(idx, itemId, type) {
+      const stars = itemStars[idx];
+      if (!stars) return;
+      const btn = document.getElementById(`submit-star-${idx}`);
+      if (btn) { btn.disabled = true; btn.textContent = 'Enviando...'; }
+
+      try {
+        const endpoint = type === 'movie' ? `/movies/${itemId}/rate` : `/series/${itemId}/rate`;
+        const result = await NetPolixAPI.post(endpoint, { stars });
+
+        // Mark card as rated
+        const card = document.getElementById(`rate-card-${idx}`);
+        if (card) {
+          card.classList.add('rated');
+          card.querySelector('.cart-star-widget').style.display = 'none';
+          card.querySelector('.cart-star-label').style.display = 'none';
+          if (btn) btn.style.display = 'none';
+          const done = document.createElement('div');
+          done.className = 'rate-done-msg';
+          done.innerHTML = `✅ ¡Gracias! ★${stars} — Nuevo promedio: ${result.avgRating?.toFixed(1)} (${result.totalRatings} valoraciones)`;
+          card.appendChild(done);
+        }
+
+        showNotification(`★${stars} enviado. Promedio actualizado: ${result.avgRating?.toFixed(1)}`, 'success');
+      } catch (err) {
+        showNotification(err.message || 'Error al enviar calificación', 'error');
+        if (btn) { btn.disabled = false; btn.textContent = '✨ Enviar calificación'; }
       }
     }
   </script>

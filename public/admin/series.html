@@ -78,6 +78,11 @@
           </div>
           <div class="form-group"><label class="form-label">URL Imagen</label><input type="url" class="form-control" name="imageUrl" value="${s?.imageUrl||''}"></div>
           <div class="form-group"><label class="form-label">Descripción</label><textarea class="form-control" name="description" rows="2">${s?.description||''}</textarea></div>
+          <div class="form-group">
+            <label class="form-label">🎬 URL del Tráiler (YouTube)</label>
+            <input type="url" class="form-control" name="trailerUrl" value="${s?.trailerUrl||''}" placeholder="https://youtu.be/... o https://www.youtube.com/watch?v=...">
+            <p class="form-help">Pega el enlace de YouTube del tráiler oficial</p>
+          </div>
         </form>`,
         `<button class="btn btn-ghost" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="saveSeries('${s?.id||''}')">Guardar</button>`,
         { size:'lg' }
@@ -86,7 +91,7 @@
     async function saveSeries(id) {
       const form=document.getElementById('sf'); const fd=new FormData(form);
       const cats=[...form.querySelectorAll('input[name="categories"]:checked')].map(cb=>cb.value);
-      const data={ isan:fd.get('isan'), title:fd.get('title'), seasons:parseInt(fd.get('seasons'))||null, episodes:parseInt(fd.get('episodes'))||null, categories:cats, salePrice:parseFloat(fd.get('salePrice'))||0, rentalPrice:parseFloat(fd.get('rentalPrice'))||0, imageUrl:fd.get('imageUrl'), description:fd.get('description') };
+      const data={ isan:fd.get('isan'), title:fd.get('title'), seasons:parseInt(fd.get('seasons'))||null, episodes:parseInt(fd.get('episodes'))||null, categories:cats, salePrice:parseFloat(fd.get('salePrice'))||0, rentalPrice:parseFloat(fd.get('rentalPrice'))||0, imageUrl:fd.get('imageUrl'), description:fd.get('description'), trailerUrl:fd.get('trailerUrl')||null };
       try {
         if(id) await NetPolixAPI.put('/series/'+id,data); else await NetPolixAPI.post('/series',data);
         showNotification('Serie guardada','success'); closeModal(); loadSeries();

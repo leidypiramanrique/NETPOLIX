@@ -128,6 +128,7 @@ async function main() {
         rentalPrice: movie.rentalPrice || 0,
         imageUrl: movie.imageUrl || null,
         description: movie.description || null,
+          trailerUrl: movie.trailerUrl || null,
         active: movie.active !== false,
         createdAt: movie.createdAt ? new Date(movie.createdAt) : new Date()
       },
@@ -152,6 +153,7 @@ async function main() {
         rentalPrice: movie.rentalPrice || 0,
         imageUrl: movie.imageUrl || null,
         description: movie.description || null,
+          trailerUrl: movie.trailerUrl || null,
         active: movie.active !== false,
         createdAt: movie.createdAt ? new Date(movie.createdAt) : new Date()
       }
@@ -184,6 +186,7 @@ async function main() {
         rentalPrice: s.rentalPrice || 0,
         imageUrl: s.imageUrl || null,
         description: s.description || null,
+          trailerUrl: s.trailerUrl || null,
         active: s.active !== false,
         createdAt: s.createdAt ? new Date(s.createdAt) : new Date()
       },
@@ -208,6 +211,7 @@ async function main() {
         rentalPrice: s.rentalPrice || 0,
         imageUrl: s.imageUrl || null,
         description: s.description || null,
+          trailerUrl: s.trailerUrl || null,
         active: s.active !== false,
         createdAt: s.createdAt ? new Date(s.createdAt) : new Date()
       }

@@ -11,6 +11,39 @@
   <link rel="stylesheet" href="/css/layout.css">
   <link rel="stylesheet" href="/css/animations.css">
   <link rel="stylesheet" href="/css/dashboard.css">
+
+  <style>
+    /* UI específica para Historial: filtros */
+    .history-page .toolbar.history-filters-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: var(--space-5) var(--space-6);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+    }
+
+    .history-page .toolbar-left {
+      gap: var(--space-5);
+    }
+
+    .history-page .toolbar .history-select {
+      max-width: 240px;
+      min-width: 190px;
+    }
+
+    @media (max-width: 768px) {
+      .history-page .toolbar.history-filters-card {
+        padding: var(--space-4) var(--space-4);
+      }
+      .history-page .toolbar-left {
+        gap: var(--space-3);
+      }
+      .history-page .toolbar .history-select {
+        max-width: 100%;
+        min-width: 0;
+      }
+    }
+  </style>
 </head>
 <body>
   <div class="app-layout">
@@ -20,7 +53,7 @@
         <button class="mobile-menu-btn" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
         <h2 class="top-bar-title">Historial de Operaciones</h2>
       </header>
-      <div class="page-content">
+      <div class="page-content history-page">
         <div class="page-header"><h1>📋 Mi Historial</h1><p>Registro de todas tus compras y alquileres</p></div>
 
         <!-- Summary stats -->
@@ -31,14 +64,14 @@
         </div>
 
         <!-- Filters -->
-        <div class="toolbar mb-4">
+        <div class="toolbar history-filters-card mb-4">
           <div class="toolbar-left">
-            <select class="form-select" id="filter-type" onchange="filterHistory()" style="width:160px;">
+            <select class="form-select history-select" id="filter-type" onchange="filterHistory()">
               <option value="">Todas las ops.</option>
               <option value="compra">Solo Compras</option>
               <option value="alquiler">Solo Alquileres</option>
             </select>
-            <select class="form-select" id="filter-item" onchange="filterHistory()" style="width:160px;">
+            <select class="form-select history-select" id="filter-item" onchange="filterHistory()">
               <option value="">Todo el contenido</option>
               <option value="movie">Películas</option>
               <option value="series">Series</option>

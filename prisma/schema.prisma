@@ -58,6 +58,7 @@ model Movie {
   rentalPrice      Float    @default(0)
   imageUrl         String?
   description      String?
+  trailerUrl       String?
   createdAt        DateTime @default(now())
   active           Boolean  @default(true)
 
@@ -88,6 +89,7 @@ model Series {
   rentalPrice      Float    @default(0)
   imageUrl         String?
   description      String?
+  trailerUrl       String?
   createdAt        DateTime @default(now())
   active           Boolean  @default(true)
 

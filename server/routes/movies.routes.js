@@ -97,6 +97,7 @@ router.post('/', authenticateToken, authorizeRoles('admin'), async (req, res) =>
         rentalPrice: req.body.rentalPrice || 0,
         imageUrl: req.body.imageUrl || null,
         description: req.body.description || null,
+        trailerUrl: req.body.trailerUrl || null,
         rating: req.body.rating || null,
         avgRating: 0,
         totalRatings: 0,
@@ -137,25 +138,36 @@ router.delete('/:id', authenticateToken, authorizeRoles('admin'), async (req, re
   }
 });
 
-// POST /api/movies/:id/rate
+// POST /api/movies/:id/rate  (cliente — solo si compró o alquiló)
 router.post('/:id/rate', authenticateToken, authorizeRoles('cliente'), async (req, res) => {
   try {
-    const { rating } = req.body;
-    const validRatings = { 'excelente': 5, 'buena': 4, 'regular': 3, 'mala': 2 };
-    if (!validRatings[rating]) return res.status(400).json({ error: 'Calificación inválida' });
+    const stars = parseInt(req.body.stars);
+    if (!stars || stars < 1 || stars > 5) {
+      return res.status(400).json({ error: 'Calificación inválida. Usa un número entre 1 y 5.' });
+    }
 
     const movie = await prisma.movie.findUnique({ where: { id: req.params.id } });
     if (!movie) return res.status(404).json({ error: 'Película no encontrada' });
 
-    const total = (movie.totalRatings || 0) + 1;
-    const avg = (((movie.avgRating || 0) * (movie.totalRatings || 0)) + validRatings[rating]) / total;
+    // Verificar que el usuario compró o alquiló esta película
+    const purchase = await prisma.order.findFirst({
+      where: { userId: req.user.id, itemId: req.params.id, itemType: 'movie' }
+    });
+    if (!purchase) {
+      return res.status(403).json({ error: 'Solo puedes calificar películas que hayas comprado o alquilado.' });
+    }
+
+    // Calcular nuevo promedio acumulado (preserva el rating inicial predeterminado)
+    const currentTotal = movie.totalRatings || 0;
+    const currentAvg = movie.avgRating || 0;
+    const newTotal = currentTotal + 1;
+    const newAvg = ((currentAvg * currentTotal) + stars) / newTotal;
 
     const updated = await prisma.movie.update({
       where: { id: req.params.id },
       data: {
-        avgRating: Math.round(avg * 10) / 10,
-        totalRatings: total,
-        rating: rating
+        avgRating: Math.round(newAvg * 10) / 10,
+        totalRatings: newTotal
       }
     });
 

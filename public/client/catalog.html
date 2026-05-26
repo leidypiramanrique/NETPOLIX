@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="/css/forms.css">
   <link rel="stylesheet" href="/css/dashboard.css">
   <link rel="stylesheet" href="/css/client-catalog.css">
+  <link rel="stylesheet" href="/css/detail-modal.css">
 </head>
 <body>
   <div class="app-layout">
@@ -30,7 +31,7 @@
 
         <!-- ═══ HERO CAROUSEL ═══ -->
         <div class="catalog-hero" id="hero-carousel">
-          <div class="hero-loading" style="display:flex;align-items:center;justify-content:center;height:100%;background:var(--bg-surface);border-radius:var(--radius-xl);">
+          <div style="display:flex;align-items:center;justify-content:center;height:100%;background:var(--bg-surface);border-radius:var(--radius-xl);">
             <div class="spinner"></div>
           </div>
         </div>
@@ -46,18 +47,9 @@
               </div>
             </div>
             <div class="vip-banner-right">
-              <div class="vip-stat">
-                <span class="stat-num" id="stat-movies">0</span>
-                <span class="stat-lbl">Películas</span>
-              </div>
-              <div class="vip-stat">
-                <span class="stat-num" id="stat-series">0</span>
-                <span class="stat-lbl">Series</span>
-              </div>
-              <div class="vip-stat">
-                <span class="stat-num" id="stat-collections">0</span>
-                <span class="stat-lbl">Colecciones</span>
-              </div>
+              <div class="vip-stat"><span class="stat-num" id="stat-movies">0</span><span class="stat-lbl">Películas</span></div>
+              <div class="vip-stat"><span class="stat-num" id="stat-series">0</span><span class="stat-lbl">Series</span></div>
+              <div class="vip-stat"><span class="stat-num" id="stat-collections">0</span><span class="stat-lbl">Colecciones</span></div>
               <a href="/client/profile.html" class="btn btn-outline btn-sm" style="align-self:center;">Ver Perfil</a>
             </div>
           </div>
@@ -83,18 +75,12 @@
 
         <!-- ═══ TABS ═══ -->
         <div class="premium-tabs" id="content-tabs">
-          <button class="premium-tab active" onclick="switchTab('movies',this)">
-            🎬 Películas <span class="tab-count" id="tab-count-movies">0</span>
-          </button>
-          <button class="premium-tab" onclick="switchTab('series',this)">
-            📺 Series <span class="tab-count" id="tab-count-series">0</span>
-          </button>
-          <button class="premium-tab" onclick="switchTab('collections',this)">
-            📦 Colecciones <span class="tab-count" id="tab-count-collections">0</span>
-          </button>
+          <button class="premium-tab active" onclick="switchTab('movies',this)">🎬 Películas <span class="tab-count" id="tab-count-movies">0</span></button>
+          <button class="premium-tab" onclick="switchTab('series',this)">📺 Series <span class="tab-count" id="tab-count-series">0</span></button>
+          <button class="premium-tab" onclick="switchTab('collections',this)">📦 Colecciones <span class="tab-count" id="tab-count-collections">0</span></button>
         </div>
 
-        <!-- ═══ SECTION TITLE + RESULTS ═══ -->
+        <!-- ═══ SECTION TITLE ═══ -->
         <div class="catalog-section-title">
           <h2 id="section-title">🎬 <span class="section-accent">Películas</span></h2>
           <span class="results-count" id="results-count"></span>
@@ -114,14 +100,190 @@
 
   <!-- ═══ FLOATING CART ═══ -->
   <a href="/client/cart.html" class="floating-cart" id="floating-cart" style="display:none;">
-    🛒 Carrito
-    <span class="cart-badge" id="cart-count-float">0</span>
+    🛒 Carrito <span class="cart-badge" id="cart-count-float">0</span>
   </a>
 
-  <!-- ═══ MODAL ═══ -->
-  <div id="modal-overlay" class="modal-overlay">
-    <div class="modal" id="modal-container"></div>
+  <!-- ═══ OLD MODAL ═══ -->
+  <div id="modal-overlay" class="modal-overlay"><div class="modal" id="modal-container"></div></div>
+
+  <!-- ═══ CINEMATIC DETAIL OVERLAY ═══ -->
+  <div class="detail-overlay" id="detail-overlay" onclick="closeDetail(event)">
+    <div class="detail-modal" id="detail-modal"></div>
   </div>
+
+  <!-- ═══ CART ADDED TOAST (custom, full-screen) ═══ -->
+  <div id="cart-added-toast" style="
+    display:none; position:fixed; inset:0; z-index:2000;
+    align-items:center; justify-content:center;
+    background:rgba(5,8,18,0.82); backdrop-filter:blur(12px);
+  " onclick="document.getElementById('cart-added-toast').style.display='none'">
+    <div id="cart-toast-box" style="
+      background:linear-gradient(135deg,#0d1117,#111827);
+      border:1px solid rgba(0,255,136,0.3);
+      border-radius:24px; padding:40px 48px; text-align:center;
+      max-width:420px; width:90%;
+      box-shadow:0 30px 80px rgba(0,0,0,0.7),0 0 50px rgba(0,255,136,0.1);
+      animation: toastIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    ">
+      <div style="font-size:3.5rem;margin-bottom:16px;animation:float 2s ease-in-out infinite;">🛒</div>
+      <h3 id="cart-toast-title" style="font-size:1.4rem;font-weight:800;color:#fff;margin-bottom:8px;"></h3>
+      <p id="cart-toast-sub" style="color:rgba(255,255,255,0.55);font-size:0.9rem;margin-bottom:24px;line-height:1.5;"></p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <a href="/client/cart.html" style="
+          padding:12px 28px; background:linear-gradient(135deg,#00ff88,#00cc6a);
+          border:none; border-radius:12px; color:#000; font-weight:800;
+          font-size:0.9rem; text-decoration:none; display:inline-block;
+          transition:all 0.2s ease; box-shadow:0 4px 20px rgba(0,255,136,0.3);
+        " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">🛒 Ver Carrito</a>
+        <button onclick="document.getElementById('cart-added-toast').style.display='none'" style="
+          padding:12px 28px; background:rgba(255,255,255,0.07);
+          border:1px solid rgba(255,255,255,0.15); border-radius:12px;
+          color:#fff; font-weight:700; font-size:0.9rem; cursor:pointer;
+          transition:all 0.2s ease;
+        " onmouseover="this.style.background='rgba(255,255,255,0.12)'" onmouseout="this.style.background='rgba(255,255,255,0.07)'">Seguir explorando</button>
+      </div>
+    </div>
+  </div>
+
+  <style>
+  @keyframes toastIn {
+    0% { transform:scale(0.8) translateY(20px); opacity:0; }
+    100% { transform:scale(1) translateY(0); opacity:1; }
+  }
+  .trailer-section {
+    margin-top: 30px;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid rgba(255,0,84,0.28);
+    background: linear-gradient(145deg, rgba(255,0,84,0.1), rgba(0,0,0,0.25));
+    position: relative;
+    box-shadow: 0 16px 44px rgba(0, 0, 0, 0.45), 0 0 30px rgba(255, 0, 84, 0.1);
+  }
+  .trailer-header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 14px 20px;
+    font-size: 12px; text-transform: uppercase; letter-spacing: 0.16em;
+    color: rgba(255,80,100,0.8); font-weight: 700;
+    border-bottom: 1px solid rgba(255,0,84,0.15);
+  }
+  .trailer-embed {
+    position: relative;
+    height: clamp(240px, 36vw, 460px);
+    overflow: hidden;
+    background: #000;
+  }
+  .trailer-embed iframe {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    border: none;
+  }
+  .trailer-click-shield {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: auto;
+    background: transparent;
+    cursor: default;
+  }
+  .trailer-replay-wrapper {
+    padding: 10px 20px 18px;
+    display: flex;
+    justify-content: flex-end;
+    background: radial-gradient(600px 180px at 0% 0%, rgba(255,0,84,0.1), transparent 60%);
+  }
+  .trailer-replay-btn {
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.24);
+    background: rgba(0,0,0,0.4);
+    color: #fff;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    opacity: 0.85;
+    transition: all 0.2s ease;
+  }
+  .trailer-replay-btn:hover {
+    opacity: 1;
+    transform: translateY(-1px);
+    box-shadow: 0 0 18px rgba(255,0,84,0.35);
+  }
+  .trailer-placeholder {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 10px; padding: 28px; color: rgba(255,255,255,0.3); font-size: 0.85rem;
+  }
+  .trailer-placeholder .play-icon { font-size: 2.5rem; opacity: 0.4; }
+  
+  /* ═════════════════════════════════════════════════════
+     Mini Catálogo dentro de Colecciones (sin precio)
+     ═════════════════════════════════════════════════════ */
+  .collection-mini { margin-top: 18px; }
+  .collection-mini-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: rgba(0,212,255,0.7);
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .collection-mini-items { display: flex; flex-direction: column; gap: 10px; }
+  .collection-mini-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 16px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .collection-mini-item:hover {
+    transform: translateY(-2px);
+    border-color: rgba(0,212,255,0.26);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+  }
+  .collection-mini-poster {
+    width: 54px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 1px solid rgba(0,212,255,0.22);
+    background: rgba(0,0,0,0.2);
+    flex-shrink: 0;
+  }
+  .collection-mini-item-title {
+    color: #fff;
+    font-weight: 800;
+    font-size: 0.92rem;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 280px;
+  }
+  .collection-mini-item-meta {
+    color: rgba(240,244,255,0.6);
+    font-size: 0.8rem;
+    margin-top: 4px;
+  }
+  .collection-mini-loading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: rgba(255,255,255,0.55);
+    font-size: 0.9rem;
+  }
+  .collection-mini-empty {
+    color: rgba(255,255,255,0.55);
+    font-size: 0.9rem;
+    padding: 10px 0;
+  }
+  </style>
 
   <script src="/js/api.js"></script>
   <script src="/js/auth.js"></script>
@@ -131,8 +293,11 @@
     let allMovies = [], allSeries = [], allCollections = [];
     let currentTab = 'movies';
     let cart = JSON.parse(localStorage.getItem('netpolix_cart') || '[]');
-    let heroInterval = null;
-    let currentSlide = 0;
+    let heroInterval = null, currentSlide = 0;
+    let myOrders = [];
+    let selectedStars = 0;
+    let currentDetailItem = null;
+    let detailViewStack = [];
 
     document.addEventListener('DOMContentLoaded', async () => {
       if (!AuthManager.checkAuth()) return;
@@ -140,53 +305,40 @@
       renderSidebar('cliente');
       updateCartCount();
 
-      // Load user points
       try {
         const profile = await NetPolixAPI.get('/auth/profile');
         document.getElementById('user-points').textContent = profile.points || 0;
       } catch (e) {}
 
-      // Load categories for filter
+      try { myOrders = await NetPolixAPI.get('/orders/my'); } catch (e) { myOrders = []; }
+
       try {
         const cats = await NetPolixAPI.get('/categories');
         const sel = document.getElementById('filter-category');
         cats.forEach(c => {
           const o = document.createElement('option');
-          o.value = c.name;
-          o.textContent = c.name;
-          sel.appendChild(o);
+          o.value = c.name; o.textContent = c.name; sel.appendChild(o);
         });
       } catch (e) {}
 
       loadContent();
+      document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDetailModal(); });
     });
 
     async function loadContent() {
       try {
         [allMovies, allSeries, allCollections] = await Promise.all([
-          NetPolixAPI.get('/movies'),
-          NetPolixAPI.get('/series'),
-          NetPolixAPI.get('/collections')
+          NetPolixAPI.get('/movies'), NetPolixAPI.get('/series'), NetPolixAPI.get('/collections')
         ]);
-
-        // Update stats
         document.getElementById('stat-movies').textContent = allMovies.length;
         document.getElementById('stat-series').textContent = allSeries.length;
         document.getElementById('stat-collections').textContent = allCollections.length;
-
-        // Update tab counts
         document.getElementById('tab-count-movies').textContent = allMovies.length;
         document.getElementById('tab-count-series').textContent = allSeries.length;
         document.getElementById('tab-count-collections').textContent = allCollections.length;
-
-        // Build hero carousel with top rated movies
         buildHeroCarousel();
-
-        // Render grid
         renderGrid();
-      } catch (err) {
-        showNotification('Error cargando catálogo', 'error');
-      }
+      } catch (err) { showNotification('Error cargando catálogo', 'error'); }
     }
 
     // ═══ HERO CAROUSEL ═══
@@ -196,51 +348,44 @@
         .sort((a, b) => (b.avgRating || 0) - (a.avgRating || 0))
         .slice(0, 5);
 
-      if (!featured.length) {
-        document.getElementById('hero-carousel').style.display = 'none';
-        return;
-      }
+      if (!featured.length) { document.getElementById('hero-carousel').style.display = 'none'; return; }
 
       const carousel = document.getElementById('hero-carousel');
       carousel.innerHTML = featured.map((m, i) => `
-        <div class="hero-slide ${i === 0 ? 'active' : ''}" data-index="${i}">
+        <div class="hero-slide ${i === 0 ? 'active' : ''}" data-index="${i}" onclick="openDetailModal(${JSON.stringify(m).replace(/"/g, '&quot;')}, 'movie')">
           <img src="${m.imageUrl}" alt="${m.title}" onerror="this.src='/assets/logo-netpolix.png'">
           <div class="hero-gradient"></div>
           <div class="hero-info">
             <div class="hero-badge">⭐ Top ${i + 1} · ${m.classification || 'NR'}</div>
             <h2>${m.title}</h2>
             <div class="hero-meta">
-              <span>${m.year || '?'}</span>
-              <span>·</span>
-              <span>${m.duration ? m.duration + ' min' : ''}</span>
-              <span>·</span>
-              <span class="hero-rating">★ ${m.avgRating?.toFixed(1) || 'N/A'}</span>
-              <span>·</span>
+              <span>${m.year || '?'}</span><span>·</span>
+              <span>${m.duration ? m.duration + ' min' : ''}</span><span>·</span>
+              <span class="hero-rating">★ ${m.avgRating?.toFixed(1) || 'N/A'}</span><span>·</span>
               <span>${(m.categories || []).slice(0, 3).join(', ')}</span>
             </div>
             <p class="hero-desc">${m.description || ''}</p>
             <div class="hero-actions">
-              <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); addToCart(${JSON.stringify({ id: m.id, title: m.title, type: 'movie', salePrice: m.salePrice, rentalPrice: m.rentalPrice }).replace(/"/g, '&quot;')}, 'compra')">
+              <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); addToCartAndNotify(${JSON.stringify({ id: m.id, title: m.title, type: 'movie', salePrice: m.salePrice, rentalPrice: m.rentalPrice }).replace(/"/g, '&quot;')}, 'compra')">
                 💳 Comprar · $${m.salePrice?.toFixed(2) || '0.00'}
               </button>
-              <button class="btn btn-outline btn-sm" onclick="event.stopPropagation(); addToCart(${JSON.stringify({ id: m.id, title: m.title, type: 'movie', salePrice: m.salePrice, rentalPrice: m.rentalPrice }).replace(/"/g, '&quot;')}, 'alquiler')">
+              <button class="btn btn-outline btn-sm" onclick="event.stopPropagation(); addToCartAndNotify(${JSON.stringify({ id: m.id, title: m.title, type: 'movie', salePrice: m.salePrice, rentalPrice: m.rentalPrice }).replace(/"/g, '&quot;')}, 'alquiler')">
                 🎬 Alquilar · $${m.rentalPrice?.toFixed(2) || '0.00'}
+              </button>
+              <button class="btn btn-outline btn-sm" onclick="event.stopPropagation(); openDetailModal(${JSON.stringify(m).replace(/"/g, '&quot;')}, 'movie')" style="background:rgba(255,255,255,0.08);">
+                👁 Ver detalles
               </button>
             </div>
           </div>
         </div>
       `).join('') + `
         <div class="hero-dots">
-          ${featured.map((_, i) => `<button class="dot ${i === 0 ? 'active' : ''}" onclick="goToSlide(${i})"></button>`).join('')}
+          ${featured.map((_, i) => `<button class="dot ${i === 0 ? 'active' : ''}" onclick="event.stopPropagation();goToSlide(${i})"></button>`).join('')}
         </div>
       `;
 
-      // Auto-rotate
       if (featured.length > 1) {
-        heroInterval = setInterval(() => {
-          currentSlide = (currentSlide + 1) % featured.length;
-          goToSlide(currentSlide);
-        }, 6000);
+        heroInterval = setInterval(() => { currentSlide = (currentSlide + 1) % featured.length; goToSlide(currentSlide); }, 6000);
       }
     }
 
@@ -254,23 +399,19 @@
       if (dots[index]) dots[index].classList.add('active');
     }
 
-    // ═══ TAB SWITCHING ═══
     function switchTab(tab, el) {
       currentTab = tab;
       document.querySelectorAll('.premium-tab').forEach(t => t.classList.remove('active'));
       el.classList.add('active');
-
       const titleEl = document.getElementById('section-title');
       if (tab === 'movies') titleEl.innerHTML = '🎬 <span class="section-accent">Películas</span>';
       else if (tab === 'series') titleEl.innerHTML = '📺 <span class="section-accent">Series</span>';
       else titleEl.innerHTML = '📦 <span class="section-accent">Colecciones</span>';
-
       renderGrid();
     }
 
     function applyFilters() { renderGrid(); }
 
-    // ═══ RENDER GRID ═══
     function renderGrid() {
       const search = document.getElementById('search-input').value.toLowerCase();
       const cat = document.getElementById('filter-category').value;
@@ -286,9 +427,7 @@
         });
         applySorting(items, sort);
         document.getElementById('results-count').textContent = `${items.length} resultado${items.length !== 1 ? 's' : ''}`;
-        grid.innerHTML = items.length
-          ? items.map((m, i) => premiumMovieCard(m, 'movie', i)).join('')
-          : emptyState('películas');
+        grid.innerHTML = items.length ? items.map((m, i) => premiumMovieCard(m, 'movie', i)).join('') : emptyState('películas');
       } else if (currentTab === 'series') {
         items = allSeries.filter(s => {
           if (search && !s.title.toLowerCase().includes(search)) return false;
@@ -297,15 +436,11 @@
         });
         applySorting(items, sort);
         document.getElementById('results-count').textContent = `${items.length} resultado${items.length !== 1 ? 's' : ''}`;
-        grid.innerHTML = items.length
-          ? items.map((s, i) => premiumMovieCard(s, 'series', i)).join('')
-          : emptyState('series');
+        grid.innerHTML = items.length ? items.map((s, i) => premiumMovieCard(s, 'series', i)).join('') : emptyState('series');
       } else {
         items = allCollections.filter(c => !search || c.title.toLowerCase().includes(search));
         document.getElementById('results-count').textContent = `${items.length} resultado${items.length !== 1 ? 's' : ''}`;
-        grid.innerHTML = items.length
-          ? items.map((c, i) => premiumCollectionCard(c, i)).join('')
-          : emptyState('colecciones');
+        grid.innerHTML = items.length ? items.map((c, i) => premiumCollectionCard(c, i)).join('') : emptyState('colecciones');
       }
     }
 
@@ -316,16 +451,13 @@
       else if (sort === 'year_desc') items.sort((a, b) => (b.year || 0) - (a.year || 0));
     }
 
-    // ═══ PREMIUM MOVIE CARD ═══
     function premiumMovieCard(item, type, i) {
       const inCart = cart.some(c => c.itemId === item.id);
-      const itemData = JSON.stringify({
-        id: item.id, title: item.title, type,
-        salePrice: item.salePrice, rentalPrice: item.rentalPrice
-      }).replace(/"/g, '&quot;');
+      const itemData = JSON.stringify({ id: item.id, title: item.title, type, salePrice: item.salePrice, rentalPrice: item.rentalPrice }).replace(/"/g, '&quot;');
+      const itemFull = JSON.stringify(item).replace(/"/g, '&quot;');
 
       return `
-        <div class="premium-card fade-in-up" style="animation-delay:${i * 0.04}s">
+        <div class="premium-card fade-in-up" style="animation-delay:${i * 0.04}s" onclick="openDetailModal(${itemFull}, '${type}')">
           <div class="card-poster">
             <img src="${item.imageUrl || '/assets/logo-netpolix.png'}" alt="${item.title}" loading="lazy" onerror="this.src='/assets/logo-netpolix.png'">
             <div class="card-badges">
@@ -337,13 +469,11 @@
               <div class="overlay-categories">${(item.categories || []).join(' · ')}</div>
               ${item.description ? `<div class="overlay-desc">${item.description}</div>` : ''}
               <div class="overlay-actions">
-                <button class="btn-buy" onclick="event.stopPropagation(); addToCart(${itemData}, 'compra')">
-                  💳 Comprar
-                  <span class="btn-label">$${item.salePrice?.toFixed(2) || '0.00'}</span>
+                <button class="btn-buy" onclick="event.stopPropagation(); addToCartAndNotify(${itemData}, 'compra')">
+                  💳 Comprar <span class="btn-label">$${item.salePrice?.toFixed(2) || '0.00'}</span>
                 </button>
-                <button class="btn-rent" onclick="event.stopPropagation(); addToCart(${itemData}, 'alquiler')">
-                  🎬 Alquilar
-                  <span class="btn-label">$${item.rentalPrice?.toFixed(2) || '0.00'}</span>
+                <button class="btn-rent" onclick="event.stopPropagation(); addToCartAndNotify(${itemData}, 'alquiler')">
+                  🎬 Alquilar <span class="btn-label">$${item.rentalPrice?.toFixed(2) || '0.00'}</span>
                 </button>
               </div>
             </div>
@@ -363,15 +493,19 @@
         </div>`;
     }
 
-    // ═══ PREMIUM COLLECTION CARD ═══
     function premiumCollectionCard(col, i) {
-      const itemData = JSON.stringify({
-        id: col.id, title: col.title, type: 'collection',
-        salePrice: col.salePrice, rentalPrice: col.rentalPrice
+      const itemData = JSON.stringify({ id: col.id, title: col.title, type: 'collection', salePrice: col.salePrice, rentalPrice: col.rentalPrice }).replace(/"/g, '&quot;');
+      const colPreviewData = JSON.stringify({
+        id: col.id,
+        title: col.title,
+        description: col.description,
+        volume: col.volume || 1,
+        videos: col.videos || [],
+        salePrice: col.salePrice || 0,
+        rentalPrice: col.rentalPrice || 0
       }).replace(/"/g, '&quot;');
-
       return `
-        <div class="premium-collection-card fade-in-up" style="animation-delay:${i * 0.04}s">
+        <div class="premium-collection-card fade-in-up" style="animation-delay:${i * 0.04}s" onclick="openCollectionModal(${colPreviewData})">
           <div class="collection-visual">
             <div class="collection-stack">
               <div class="stack-icon">🎬</div>
@@ -380,14 +514,8 @@
             </div>
             <div class="card-overlay">
               <div class="overlay-actions">
-                <button class="btn-buy" onclick="event.stopPropagation(); addToCart(${itemData}, 'compra')">
-                  💳 Comprar
-                  <span class="btn-label">$${col.salePrice?.toFixed(2) || '0.00'}</span>
-                </button>
-                <button class="btn-rent" onclick="event.stopPropagation(); addToCart(${itemData}, 'alquiler')">
-                  🎬 Alquilar
-                  <span class="btn-label">$${col.rentalPrice?.toFixed(2) || '0.00'}</span>
-                </button>
+                <button class="btn-buy" onclick="event.stopPropagation(); addToCartAndNotify(${itemData}, 'compra')">💳 Comprar <span class="btn-label">$${col.salePrice?.toFixed(2) || '0.00'}</span></button>
+                <button class="btn-rent" onclick="event.stopPropagation(); addToCartAndNotify(${itemData}, 'alquiler')">🎬 Alquilar <span class="btn-label">$${col.rentalPrice?.toFixed(2) || '0.00'}</span></button>
               </div>
             </div>
           </div>
@@ -406,49 +534,484 @@
         </div>`;
     }
 
-    // ═══ EMPTY STATE ═══
     function emptyState(type) {
-      return `
-        <div class="premium-empty">
-          <div class="empty-visual">🎬</div>
-          <h3>No hay ${type} disponibles</h3>
-          <p>Intenta cambiar los filtros o vuelve más tarde</p>
-        </div>`;
+      return `<div class="premium-empty"><div class="empty-visual">🎬</div><h3>No hay ${type} disponibles</h3><p>Intenta cambiar los filtros o vuelve más tarde</p></div>`;
     }
 
-    // ═══ CART FUNCTIONS ═══
-    function addToCart(item, opType) {
+    // ═══════════════════════════════════════════════════
+    // CART FUNCTIONS — with full-screen beautiful toast
+    // ═══════════════════════════════════════════════════
+
+    function addToCartAndNotify(item, opType) {
       const existing = cart.findIndex(c => c.itemId === item.id && c.opType === opType);
       if (existing >= 0) {
-        showNotification('Este item ya está en tu carrito', 'info');
+        // Si el usuario ya lo tenía en el carrito (por una versión anterior o un flujo anterior),
+        // actualizamos el precio para que no se quede en $0.00.
+        const nextPrice = opType === 'compra' ? item.salePrice : item.rentalPrice;
+        cart[existing] = { ...cart[existing], itemTitle: item.title, itemType: item.type, price: nextPrice };
+        localStorage.setItem('netpolix_cart', JSON.stringify(cart));
+        updateCartCount();
+        showCartToast(item, opType, true);
         return;
       }
-      cart.push({
-        itemId: item.id,
-        itemTitle: item.title,
-        itemType: item.type,
-        opType,
-        price: opType === 'compra' ? item.salePrice : item.rentalPrice
-      });
+      cart.push({ itemId: item.id, itemTitle: item.title, itemType: item.type, opType, price: opType === 'compra' ? item.salePrice : item.rentalPrice });
       localStorage.setItem('netpolix_cart', JSON.stringify(cart));
       updateCartCount();
-      showNotification(`"${item.title}" agregado al carrito`, 'success');
-
-      // Re-render to show "in cart" badge
+      showCartToast(item, opType, false);
       renderGrid();
+    }
+
+    function showCartToast(item, opType, alreadyIn) {
+      const typeIcon = item.type === 'movie' ? '🎬' : item.type === 'series' ? '📺' : '📦';
+      const typeName = item.type === 'movie' ? 'Película' : item.type === 'series' ? 'Serie' : 'Colección';
+      const price = (opType === 'compra' ? item.salePrice : item.rentalPrice) || 0;
+
+      if (alreadyIn) {
+        document.getElementById('cart-toast-title').textContent = '¡Ya está en tu carrito!';
+        document.getElementById('cart-toast-sub').innerHTML = `<strong>${typeIcon} ${item.title}</strong> ya fue agregado como <strong>${opType}</strong>.<br>Ve al carrito para completar tu compra.`;
+      } else {
+        document.getElementById('cart-toast-title').textContent = '¡Agregado al carrito! 🎉';
+        document.getElementById('cart-toast-sub').innerHTML = `${typeIcon} <strong>${item.title}</strong><br><span style="color:rgba(255,255,255,0.4)">${typeName} · ${opType === 'compra' ? 'Compra' : 'Alquiler'} · </span><strong style="color:#00D4FF">$${price.toFixed(2)}</strong>`;
+      }
+
+      const toast = document.getElementById('cart-added-toast');
+      toast.style.display = 'flex';
+      // Auto-close after 4s if no interaction
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => { toast.style.display = 'none'; }, 4000);
     }
 
     function updateCartCount() {
       const count = cart.length;
       document.getElementById('cart-count-top').textContent = count;
       document.getElementById('cart-count-float').textContent = count;
+      document.getElementById('floating-cart').style.display = count > 0 ? 'flex' : 'none';
+    }
 
-      const floatingCart = document.getElementById('floating-cart');
-      if (count > 0) {
-        floatingCart.style.display = 'flex';
-      } else {
-        floatingCart.style.display = 'none';
+    // ═══════════════════════════════════════════════════
+    // DETAIL MODAL — Cinematic Experience with Trailer
+    // ═══════════════════════════════════════════════════
+
+    async function openCollectionModal(collection) {
+      // Reset del stack: la vista de colección debe ser el "punto de regreso"
+      detailViewStack = [];
+      selectedStars = 0;
+
+      currentDetailItem = {
+        id: collection.id,
+        title: collection.title,
+        type: 'collection',
+        description: collection.description || null
+      };
+
+      const detailOverlayEl = document.getElementById('detail-overlay');
+      detailOverlayEl.classList.add('open');
+      document.body.style.overflow = 'hidden';
+
+      const detailModalEl = document.getElementById('detail-modal');
+      detailModalEl.innerHTML = `
+        <button class="detail-close" onclick="closeDetailModal()">✕</button>
+        <div class="detail-backdrop">
+          <img class="backdrop-img" src="/assets/logo-netpolix.png" alt="${collection.title}" onerror="this.src='/assets/logo-netpolix.png'">
+          <div class="detail-backdrop-gradient"></div>
+        </div>
+        <div class="detail-body">
+          <div class="detail-poster">
+            <img src="/assets/logo-netpolix.png" alt="${collection.title}" onerror="this.src='/assets/logo-netpolix.png'">
+          </div>
+          <div class="detail-info">
+            <div class="detail-type-badge">📦 Colección</div>
+            <h2 class="detail-title">${collection.title}</h2>
+            <div class="detail-meta-chips">
+              <span class="meta-chip">Vol. ${collection.volume || 1}</span>
+              <span class="meta-chip">${(collection.videos || []).length} títulos</span>
+            </div>
+            ${collection.description ? `<p class="detail-description">${collection.description}</p>` : ''}
+            <div class="detail-actions">
+              <button class="detail-btn-buy" onclick="addToCartAndNotify({ id: '${collection.id}', title: '${collection.title.replace(/'/g, "\\'")}', type: 'collection', salePrice: ${collection.salePrice || 0}, rentalPrice: ${collection.rentalPrice || 0} }, 'compra')">
+                💳 Comprar <span style="font-size:0.8rem;opacity:0.7;">$${(collection.salePrice || 0).toFixed(2)}</span>
+              </button>
+              <button class="detail-btn-rent" onclick="addToCartAndNotify({ id: '${collection.id}', title: '${collection.title.replace(/'/g, "\\'")}', type: 'collection', salePrice: ${collection.salePrice || 0}, rentalPrice: ${collection.rentalPrice || 0} }, 'alquiler')">
+                🎬 Alquilar <span style="font-size:0.8rem;opacity:0.55;">$${(collection.rentalPrice || 0).toFixed(2)}</span>
+              </button>
+            </div>
+            <div class="collection-mini">
+              <div class="collection-mini-label">Incluye</div>
+              <div class="collection-mini-items" id="collection-mini-items">
+                <div class="collection-mini-loading">
+                  <div class="spinner"></div>
+                  <span>Cargando títulos...</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      const collectionMiniItemHtml = (v) => {
+        const isMovie = typeof v.duration !== 'undefined';
+        const type = isMovie ? 'movie' : 'series';
+
+        const poster = v.imageUrl || '/assets/logo-netpolix.png';
+        const title = v.title || 'Sin título';
+
+        const metaParts = [];
+        if (v.year) metaParts.push(v.year);
+        if (type === 'movie') {
+          if (typeof v.duration === 'number' && v.duration) metaParts.push(`${v.duration} min`);
+        } else {
+          if (v.seasons) metaParts.push(`${v.seasons} temporadas`);
+          if (v.episodes) metaParts.push(`${v.episodes} ep.`);
+        }
+        const meta = metaParts.join(' · ');
+
+        const minimal = {
+          id: v.id,
+          title: v.title,
+          imageUrl: v.imageUrl,
+          year: v.year,
+          duration: v.duration,
+          seasons: v.seasons,
+          episodes: v.episodes,
+          trailerUrl: v.trailerUrl,
+          description: v.description,
+          classification: v.classification,
+          categories: v.categories
+        };
+
+        const vJson = JSON.stringify(minimal).replace(/"/g, '&quot;');
+
+        return `
+          <div class="collection-mini-item" onclick="openDetailModal(${vJson}, '${type}')">
+            <img class="collection-mini-poster" src="${poster}" alt="${title}" onerror="this.src='/assets/logo-netpolix.png'">
+            <div>
+              <div class="collection-mini-item-title">${title}</div>
+              ${meta ? `<div class="collection-mini-item-meta">${meta}</div>` : ''}
+            </div>
+          </div>
+        `;
+      };
+
+      try {
+        const fullCol = await NetPolixAPI.get(`/collections/${collection.id}`);
+        const items = fullCol?.videoDetails || [];
+
+        const html = items.length
+          ? items.map(v => collectionMiniItemHtml(v)).join('')
+          : `<div class="collection-mini-empty">La colección no tiene títulos.</div>`;
+
+        const itemsEl = document.getElementById('collection-mini-items');
+        if (itemsEl) itemsEl.innerHTML = html;
+      } catch (e) {
+        const itemsEl = document.getElementById('collection-mini-items');
+        if (itemsEl) itemsEl.innerHTML = `<div class="collection-mini-empty">Error cargando títulos.</div>`;
       }
+    }
+
+    async function openDetailModal(item, type) {
+      const detailModalEl = document.getElementById('detail-modal');
+
+      // Stack: si estamos saliendo desde una colección, guardamos el HTML para restaurar al cerrar
+      if (currentDetailItem?.type === 'collection') {
+        detailViewStack.push({
+          html: detailModalEl?.innerHTML || '',
+          currentDetailItem
+        });
+      }
+
+      currentDetailItem = { ...item, type };
+      selectedStars = 0;
+
+      let fullItem = item;
+      try {
+        if (type === 'movie') fullItem = await NetPolixAPI.get(`/movies/${item.id}`);
+        else if (type === 'series') fullItem = await NetPolixAPI.get(`/series/${item.id}`);
+      } catch (e) {}
+
+      // IMPORTANTE: el carrito usa `currentDetailItem`, no `fullItem`.
+      // Si abrimos desde el mini-catálogo de colección, `item` puede venir "mínimo"
+      // y no traer salePrice/rentalPrice. Sincronizamos para que el carrito no meta $0.00.
+      currentDetailItem = { ...currentDetailItem, ...fullItem, type };
+
+      const hasPurchased = myOrders.some(o => o.itemId === item.id && o.itemType === type);
+
+      const actors = (fullItem.actorDetails || []).map(p => p.name).join(', ') || (fullItem.actors || []).join(', ') || '—';
+      const directors = (fullItem.directorDetails || []).map(p => p.name).join(', ') || (fullItem.directors || []).join(', ') || '—';
+      const producers = (fullItem.producerDetails || []).map(p => p.name).join(', ') || (fullItem.producers || []).join(', ') || '';
+
+      const starsHtml = renderStarsDisplay(fullItem.avgRating || 0);
+      const langHtml = buildLangPills(fullItem);
+      const catChips = (fullItem.categories || []).map(c => `<span class="meta-chip highlight">${c}</span>`).join('');
+      const ratingSection = buildRatingSection(hasPurchased, item.id, type);
+      const trailerSection = buildTrailerSection(fullItem.trailerUrl, fullItem.title);
+
+      const typeLabel = type === 'movie' ? '🎬 Película' : type === 'series' ? '📺 Serie' : '📦 Colección';
+
+      document.getElementById('detail-modal').innerHTML = `
+        <button class="detail-close" onclick="closeDetailModal()">✕</button>
+        <div class="detail-backdrop">
+          <img class="backdrop-img" src="${fullItem.imageUrl || '/assets/logo-netpolix.png'}" alt="${fullItem.title}" onerror="this.src='/assets/logo-netpolix.png'">
+          <div class="detail-backdrop-gradient"></div>
+        </div>
+        <div class="detail-body">
+          <div class="detail-poster">
+            <img src="${fullItem.imageUrl || '/assets/logo-netpolix.png'}" alt="${fullItem.title}" onerror="this.src='/assets/logo-netpolix.png'">
+          </div>
+          <div class="detail-info">
+            <div class="detail-type-badge">${typeLabel}</div>
+            <h2 class="detail-title">${fullItem.title}</h2>
+            <div class="detail-rating-row">
+              <div class="detail-avg-rating">
+                ${starsHtml}
+                <span style="font-size:1.1rem;">${fullItem.avgRating ? fullItem.avgRating.toFixed(1) : 'N/A'}</span>
+                <span class="rating-count">(${fullItem.totalRatings || 0} valoraciones)</span>
+              </div>
+            </div>
+            <div class="detail-meta-chips">
+              ${fullItem.year ? `<span class="meta-chip">📅 ${fullItem.year}</span>` : ''}
+              ${fullItem.duration ? `<span class="meta-chip">⏱ ${fullItem.duration} min</span>` : ''}
+              ${fullItem.classification ? `<span class="meta-chip">🔞 ${fullItem.classification}</span>` : ''}
+              ${fullItem.seasons ? `<span class="meta-chip">📺 ${fullItem.seasons} temporadas</span>` : ''}
+              ${fullItem.episodes ? `<span class="meta-chip">🎞 ${fullItem.episodes} ep.</span>` : ''}
+              ${catChips}
+            </div>
+            ${fullItem.description ? `<p class="detail-description">${fullItem.description}</p>` : ''}
+            ${actors !== '—' ? `<div class="detail-section"><div class="detail-section-label">🎭 Actores</div><div class="detail-section-text">${actors}</div></div>` : ''}
+            ${directors !== '—' ? `<div class="detail-section"><div class="detail-section-label">🎬 Dirección</div><div class="detail-section-text">${directors}</div></div>` : ''}
+            ${producers ? `<div class="detail-section"><div class="detail-section-label">🎥 Producción</div><div class="detail-section-text">${producers}</div></div>` : ''}
+            ${langHtml ? `<div class="detail-section"><div class="detail-section-label">🌐 Idiomas</div>${langHtml}</div>` : ''}
+
+            <div class="detail-actions">
+              <button class="detail-btn-buy" onclick="addToCartFromModal('compra')">
+                💳 Comprar <span style="font-size:0.8rem;opacity:0.7;">$${fullItem.salePrice?.toFixed(2) || '0.00'}</span>
+              </button>
+              <button class="detail-btn-rent" onclick="addToCartFromModal('alquiler')">
+                🎬 Alquilar <span style="font-size:0.8rem;opacity:0.55;">$${fullItem.rentalPrice?.toFixed(2) || '0.00'}</span>
+              </button>
+            </div>
+
+            ${trailerSection}
+            ${ratingSection}
+          </div>
+        </div>
+      `;
+
+      document.getElementById('detail-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+      initStarWidget(item.id, type);
+    }
+
+    function buildTrailerSection(trailerUrl, itemTitle) {
+      let embedUrl = '';
+      
+      if (!trailerUrl) {
+        // Fallback: Automagically search YouTube for the trailer
+        const query = encodeURIComponent(itemTitle + ' trailer oficial español');
+        embedUrl = `https://www.youtube.com/embed?listType=search&list=${query}&autoplay=1&controls=0&rel=0&modestbranding=1&playsinline=1&mute=0&fs=0&disablekb=1`;
+      } else {
+        // Convert YouTube URL to embed with standard controls and sound
+        const ytMatch = trailerUrl.match(/(?:youtube\.com\/watch\?v=|youtube\.com\/embed\/|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+        if (ytMatch) {
+          const videoId = ytMatch[1];
+          embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&controls=0&rel=0&modestbranding=1&playsinline=1&mute=0&fs=0&disablekb=1`;
+        } else {
+          embedUrl = trailerUrl;
+        }
+      }
+
+      const safeEmbedUrl = String(embedUrl || '').replace(/"/g, '&quot;');
+
+      return `
+        <div class="trailer-section">
+          <div class="trailer-header">🎥 Tráiler Oficial</div>
+          <div class="trailer-embed">
+            <iframe
+              src="${safeEmbedUrl}"
+              title="Tráiler de ${itemTitle}"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+              loading="eager"
+              data-embedurl="${safeEmbedUrl}">
+            </iframe>
+            <div class="trailer-click-shield"></div>
+          </div>
+          <div class="trailer-replay-wrapper">
+            <button class="trailer-replay-btn" onclick="replayTrailer(this)">
+              ↻ Ver tráiler otra vez
+            </button>
+          </div>
+        </div>`;
+    }
+
+    function buildTrailerSrcWithSound(embedUrl) {
+      let url = String(embedUrl || '');
+      if (!url) return '';
+
+      // Ensure autoplay + unmuted.
+      url = url.replace(/([?&])autoplay=\d+/g, '$1autoplay=1');
+      if (!/([?&])autoplay=/.test(url)) url += (url.includes('?') ? '&' : '?') + 'autoplay=1';
+
+      url = url.replace(/([?&])mute=\d+/g, '$1mute=0');
+      if (!/([?&])mute=/.test(url)) url += '&mute=0';
+
+      // Avoid extra YouTube branding where possible.
+      if (!/([?&])modestbranding=/.test(url)) url += '&modestbranding=1';
+
+      if (!/([?&])playsinline=/.test(url)) url += '&playsinline=1';
+      return url;
+    }
+
+    function replayTrailer(btnEl) {
+      const section = btnEl?.closest?.('.trailer-section');
+      if (!section) return;
+      const iframe = section.querySelector('.trailer-embed iframe');
+      if (!iframe) return;
+
+      const baseEmbedUrl = iframe.dataset.embedurl || iframe.src;
+      const src = buildTrailerSrcWithSound(baseEmbedUrl);
+      iframe.src = src;
+
+      const shield = section.querySelector('.trailer-click-shield');
+      if (shield) shield.style.pointerEvents = 'auto';
+    }
+
+    function renderStarsDisplay(avg) {
+      if (!avg) return '<span style="color:rgba(255,255,255,0.22);">☆☆☆☆☆</span>';
+      let html = '';
+      for (let i = 1; i <= 5; i++) {
+        if (avg >= i) html += '<span style="color:#FFB800;">★</span>';
+        else if (avg >= i - 0.5) html += '<span style="color:#FFB800;opacity:0.55;">★</span>';
+        else html += '<span style="color:rgba(255,255,255,0.18);">☆</span>';
+      }
+      return html;
+    }
+
+    function buildLangPills(item) {
+      if (!item.originalLanguage && !item.subtitles?.length && !item.dubbing?.length) return '';
+      let html = '<div class="lang-pills">';
+      if (item.originalLanguage) html += `<span class="lang-pill original">🔊 ${item.originalLanguage}</span>`;
+      (item.subtitles || []).forEach(s => { html += `<span class="lang-pill sub">CC ${s}</span>`; });
+      (item.dubbing || []).forEach(d => { html += `<span class="lang-pill dub">🎙 ${d}</span>`; });
+      html += '</div>';
+      return html;
+    }
+
+    function buildRatingSection(hasPurchased, itemId, type) {
+      if (!hasPurchased) {
+        return `
+          <div class="rating-section">
+            <div class="rating-section-title">⭐ Calificar</div>
+            <div class="rating-locked-msg">🔒 Compra o alquila este contenido para poder calificarlo</div>
+          </div>`;
+      }
+      return `
+        <div class="rating-section" id="rating-section">
+          <div class="rating-section-title">⭐ Tu calificación</div>
+          <div class="star-rating-widget" id="star-widget">
+            <button class="star-btn" data-stars="1" onclick="selectStar(1)">⭐</button>
+            <button class="star-btn" data-stars="2" onclick="selectStar(2)">⭐</button>
+            <button class="star-btn" data-stars="3" onclick="selectStar(3)">⭐</button>
+            <button class="star-btn" data-stars="4" onclick="selectStar(4)">⭐</button>
+            <button class="star-btn" data-stars="5" onclick="selectStar(5)">⭐</button>
+          </div>
+          <div class="rating-label-text" id="rating-label">Selecciona una calificación</div>
+          <button class="submit-rating-btn" id="submit-rating-btn" onclick="submitRating('${itemId}', '${type}')">✨ Enviar calificación</button>
+        </div>`;
+    }
+
+    function initStarWidget(itemId, type) {
+      const stars = document.querySelectorAll('.star-btn');
+      if (!stars.length) return;
+      const labels = ['Mala 😕', 'Regular 😐', 'Buena 😊', 'Muy buena 😃', 'Excelente 🤩'];
+
+      stars.forEach(btn => {
+        btn.addEventListener('mouseenter', () => {
+          const h = parseInt(btn.dataset.stars);
+          stars.forEach(s => s.classList.toggle('lit', parseInt(s.dataset.stars) <= h));
+          const lbl = document.getElementById('rating-label');
+          if (lbl) { lbl.textContent = labels[h - 1]; lbl.classList.add('active'); }
+        });
+        btn.addEventListener('mouseleave', () => {
+          stars.forEach(s => { s.classList.remove('lit'); s.classList.toggle('selected', parseInt(s.dataset.stars) <= selectedStars); });
+          const lbl = document.getElementById('rating-label');
+          if (lbl) {
+            if (selectedStars > 0) { lbl.textContent = labels[selectedStars - 1]; lbl.classList.add('active'); }
+            else { lbl.textContent = 'Selecciona una calificación'; lbl.classList.remove('active'); }
+          }
+        });
+      });
+    }
+
+    function selectStar(n) {
+      selectedStars = n;
+      const labels = ['Mala 😕', 'Regular 😐', 'Buena 😊', 'Muy buena 😃', 'Excelente 🤩'];
+      document.querySelectorAll('.star-btn').forEach(s => {
+        const v = parseInt(s.dataset.stars);
+        s.classList.toggle('selected', v <= n);
+        s.classList.remove('lit');
+        if (v === n) { s.classList.add('popping'); setTimeout(() => s.classList.remove('popping'), 350); }
+      });
+      const lbl = document.getElementById('rating-label');
+      if (lbl) { lbl.textContent = labels[n - 1]; lbl.classList.add('active'); }
+      const btn = document.getElementById('submit-rating-btn');
+      if (btn) btn.classList.add('visible');
+    }
+
+    async function submitRating(itemId, type) {
+      if (!selectedStars) return;
+      const btn = document.getElementById('submit-rating-btn');
+      if (btn) { btn.disabled = true; btn.textContent = 'Enviando...'; }
+      try {
+        const endpoint = type === 'movie' ? `/movies/${itemId}/rate` : `/series/${itemId}/rate`;
+        const result = await NetPolixAPI.post(endpoint, { stars: selectedStars });
+        const labels = ['', 'Mala', 'Regular', 'Buena', 'Muy buena', 'Excelente'];
+        if (type === 'movie') { const idx = allMovies.findIndex(m => m.id === itemId); if (idx >= 0) { allMovies[idx].avgRating = result.avgRating; allMovies[idx].totalRatings = result.totalRatings; } }
+        else { const idx = allSeries.findIndex(s => s.id === itemId); if (idx >= 0) { allSeries[idx].avgRating = result.avgRating; allSeries[idx].totalRatings = result.totalRatings; } }
+        const sec = document.getElementById('rating-section');
+        if (sec) sec.innerHTML = `
+          <div class="rating-section-title">⭐ Tu calificación</div>
+          <div class="rating-done-msg">✅ ¡Gracias! Calificaste con ${selectedStars} ⭐ — ${labels[selectedStars]}<br>
+            <small style="opacity:0.65;margin-top:4px;display:block;">Nuevo promedio: ★ ${result.avgRating?.toFixed(1)} (${result.totalRatings} valoraciones)</small>
+          </div>`;
+        showNotification(`¡Gracias! ★${selectedStars} — Nuevo promedio: ${result.avgRating?.toFixed(1)}`, 'success');
+        renderGrid();
+      } catch (err) {
+        showNotification(err.message || 'Error al enviar calificación', 'error');
+        if (btn) { btn.disabled = false; btn.textContent = '✨ Enviar calificación'; }
+      }
+    }
+
+    function addToCartFromModal(opType) {
+      if (!currentDetailItem) return;
+      addToCartAndNotify({
+        id: currentDetailItem.id, title: currentDetailItem.title,
+        type: currentDetailItem.type, salePrice: currentDetailItem.salePrice,
+        rentalPrice: currentDetailItem.rentalPrice
+      }, opType);
+    }
+
+    function closeDetail(event) {
+      if (event.target === document.getElementById('detail-overlay')) closeDetailModal();
+    }
+
+    function closeDetailModal() {
+      // Stop YouTube iframe to avoid audio playing in background
+      const iframe = document.querySelector('.trailer-embed iframe');
+      if (iframe) { iframe.src = ''; }
+
+      // Si venimos de un mini catálogo dentro de una colección, restauramos y mantenemos el overlay abierto
+      if (detailViewStack.length > 0) {
+        const prev = detailViewStack.pop();
+        const detailModalEl = document.getElementById('detail-modal');
+        if (detailModalEl && prev?.html !== undefined) detailModalEl.innerHTML = prev.html;
+        currentDetailItem = prev?.currentDetailItem || null;
+        selectedStars = 0;
+        return;
+      }
+
+      document.getElementById('detail-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+      currentDetailItem = null; selectedStars = 0;
     }
   </script>
 </body>
